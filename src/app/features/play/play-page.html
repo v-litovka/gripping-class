@@ -1,0 +1,16 @@
+@if (fin(); as f) {
+  <app-round-finish
+    [ok]="f.ok"
+    [total]="f.n"
+    [stars]="f.stars"
+    [levelUp]="f.levelUp"
+    [level]="level()"
+    [pets]="pets()"
+    [nextMode]="nextMode()"
+    [time]="f.time"
+    (again)="restart()"
+  />
+} @else if (current(); as ex) {
+  <app-round-header [kicker]="kicker()" [pos]="pos()" [len]="len()" [again]="again()" [clock]="clock()" />
+  <app-exercise-player [exercise]="ex" [pets]="pets()" [phrases]="p.pack()?.phrases" (finished)="onDone($event)" />
+}

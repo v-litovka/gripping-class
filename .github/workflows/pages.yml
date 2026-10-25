@@ -1,0 +1,44 @@
+# Сборка и выкладка на GitHub Pages при каждом пуше в main.
+# Адрес: https://v-litovka.github.io/gripping-class/
+# Один раз включить: Settings → Pages → Source: «GitHub Actions».
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # npm 10 падает с «edgesOut» — ставим npm 11
+      - run: npx -y npm@11.6.2 ci
+      - run: npx ng test --watch=false
+      - run: npx ng build --base-href /gripping-class/
+      - run: touch dist/uroki-ng/browser/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/uroki-ng/browser
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

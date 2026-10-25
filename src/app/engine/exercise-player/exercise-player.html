@@ -1,0 +1,90 @@
+@if (lesson(); as ls) {
+<app-card>
+  <p class="kicker">{{ i18n.t('lessonKicker') }}</p>
+  @if (lessonAgain()) {
+    <p class="again">{{ i18n.t('lessonAgain') }}</p>
+  }
+  @if (lessonTask(); as task) {
+    <p class="taskline">{{ i18n.t('task') }}</p>
+    <app-rich-html [html]="task" />
+  }
+  <h2 class="ltitle">{{ ls.title }}</h2>
+  <app-rich-html [html]="ls.html" />
+  <app-confirm-button [label]="i18n.t('solveSelf')" [lockSec]="ls.lockSec ?? 15" (confirmed)="retry()" />
+</app-card>
+} @else {
+<app-card>
+  <app-prompt-view [prompt]="scene()" />
+
+  @if (step(); as st) {
+    @switch (st.kind) {
+      @case ('choice') {
+        <app-option-grid
+          [options]="st.options"
+          [answer]="st.answer"
+          [accept]="st.accept ?? []"
+          [layout]="st.layout ?? 'grid'"
+          [html]="st.optionHtml ?? {}"
+          [doShuffle]="st.shuffle !== false"
+          [lockSec]="st.lockSec ?? 0"
+          (picked)="onPick($event)"
+        />
+      }
+      @case ('input') {
+        <app-answer-input [answer]="st.answer" [placeholder]="st.placeholder ?? ''" [numeric]="!!st.numeric" [resetKey]="stepIdx()" [any]="!!st.any" (typed)="onType($event)" />
+      }
+      @case ('why') {
+        @if (praise(); as pr) {
+          <app-feedback [ok]="true" [text]="pr.text" [pet]="pr.pet" />
+        }
+        <app-why-step-view [ok]="st.ok" [wrong]="st.wrong" (answered)="onWhy($event)" />
+      }
+      @case ('memorize') {
+        <app-confirm-button [label]="st.button" [lockSec]="st.lockSec ?? 0" (confirmed)="memorized()" />
+      }
+      @case ('tap') {
+        <app-tap-words
+          [words]="st.words"
+          [accept]="st.accept"
+          [markWords]="st.markWords"
+          [markAs]="st.markAs"
+          [marked]="st.marked ?? {}"
+          (picked)="onTap($event.correct)"
+        />
+      }
+      @case ('note') {
+        <app-rich-html [html]="st.html" />
+        <app-confirm-button [label]="st.button ?? i18n.t('next')" [lockSec]="st.lockSec ?? 0" (confirmed)="memorized()" />
+      }
+      @case ('nums') {
+        <app-nums-input [fields]="st.fields" [pre]="st.pre ?? ''" [solved]="false" (submitted)="onNums($event)" />
+      }
+      @case ('multi') {
+        <app-multi-pick [options]="st.options" (submitted)="onMulti($event)" />
+      }
+      @case ('ops') {
+        <app-op-tap [parts]="st.parts" [order]="st.order" (wrong)="onOpsWrong($event.pos)" (done)="onOpsDone()" />
+      }
+      @case ('order') {
+        @if (st.note) {
+          <app-hint>{{ st.note }}</app-hint>
+        }
+        <app-order-tiles [items]="st.items" [extra]="st.extra ?? []" [inline]="!!st.inline" [joiner]="st.joiner ?? ' '" (wrong)="onOrderWrong(st, $event.pos)" (done)="onOrderDone()" />
+      }
+    }
+  }
+
+  @if (canAsk()) {
+    @if (askedHint(); as h) {
+      <app-hint>💡 {{ h }}</app-hint>
+    }
+    <button type="button" class="ask" data-test="ask-hint" (click)="askHint()">Не знаю, подскажи</button>
+  }
+  @if (fb(); as f) {
+    <app-feedback [ok]="f.ok" [text]="f.text" [pet]="f.pet" />
+  }
+  @if (diff(); as d) {
+    <app-letter-diff [letters]="d" />
+  }
+</app-card>
+}

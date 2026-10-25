@@ -1,0 +1,120 @@
+@use 'mixins' as m;
+@use 'domashka';
+
+:host { display: block; }
+.rich { display: grid; gap: 10px; }
+.rich ::ng-deep {
+  .word { @include m.display(clamp(40px, 11vw, 62px), 1.1); text-align: center; letter-spacing: 0.02em; overflow-wrap: anywhere; }
+  .word .ok, div.ex .ok { color: var(--good); background: #e3f6ea; border-radius: 8px; padding: 0 0.06em; }
+  .word .gap { display: inline-block; min-width: 0.75em; padding: 0 0.08em; border-bottom: 5px solid var(--trap); color: var(--trap); background: #fff1e8; border-radius: 8px 8px 0 0; }
+  .word .pre { border: 3px solid var(--accent); border-radius: 10px; padding: 0 0.08em; }
+  .seg { display: inline-block; padding: 0 0.04em; }
+  .seg.hl { border-bottom: 5px solid var(--accent); color: var(--accent); }
+  .sent { font-size: clamp(22px, 5.4vw, 28px); font-weight: 800; line-height: 1.7; text-align: center; text-wrap: balance; margin: 0; }
+  .blank { display: inline-block; width: 1.1em; height: 1.15em; vertical-align: -0.2em; margin-left: 4px; border: 3px dashed var(--trap); border-radius: 8px; background: #fff1e8; }
+  .why { margin: 0; font-size: 18px; font-weight: 800; text-align: center; color: var(--muted); }
+  .u1 { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+  .u2 { text-decoration: underline double; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+  .u3 { text-decoration: underline dashed; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+  .hlw, .addr { background: #ffe9a8; border-radius: 6px; padding: 0 3px; }
+  .memo { text-align: center; padding: 10px; border: 3px solid var(--ink); border-radius: 18px; background: #fff1c2; }
+  .exs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  div.ex { border: 2px dashed var(--muted); border-radius: 14px; padding: 10px 12px; background: #f7f4ff; font-weight: 800; font-size: 19px; display: grid; gap: 4px; min-width: 0; }
+  div.ex .word { font-size: 32px; }
+  div.ex .sent { font-size: 19px; }
+  .rulebox { display: grid; gap: 4px; padding: 12px 16px; border: 3px solid var(--ink); border-radius: 18px; background: #fff1c2; }
+  .rulebox > b { @include m.display(24px); }
+  .rulebox p { margin: 0; }
+  .rulebox p b { color: var(--accent); }
+  .verdict { @include m.display(30px); margin: 0; color: var(--good); }
+  .sub { margin: 4px 0 0; font-weight: 800; color: var(--muted); }
+  h3 { @include m.display(26px); margin: 4px 0 0; }
+  p { margin: 0; }
+
+  /* ---- Улица Домиков: домик, стишок, шаги «реши сама» ---- */
+  .house { --w: 270px; width: min(var(--w), 100%); margin: 0 auto; }
+  .house.small { --w: 200px; }
+  .roof { position: relative; height: 122px; }
+  .roof svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .roof polygon { fill: var(--roof); stroke: var(--ink); stroke-width: 5; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .attic { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); width: 76px; height: 76px; border-radius: 50%; background: #fff; border: 4px solid var(--ink); display: grid; place-items: center; font-weight: 900; font-size: 34px; font-variant-numeric: tabular-nums; }
+  .walls { width: 86%; margin: -3px auto 0; background: #ffe48f; border: 4px solid var(--ink); border-top-width: 0; border-radius: 0 0 14px 14px; padding: 18px 12px 22px; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .win { width: 76px; height: 76px; border-radius: 12px; background: #fff; border: 4px solid var(--ink); display: grid; place-items: center; font-weight: 900; font-size: 34px; font-variant-numeric: tabular-nums; }
+  .op { font-weight: 900; font-size: 34px; }
+  .house.small .roof { height: 74px; }
+  .house.small .attic { width: 54px; height: 54px; font-size: 24px; bottom: 7px; border-width: 3px; }
+  .house.small .walls { padding: 10px 8px 12px; gap: 6px; border-width: 3px; border-top-width: 0; }
+  .house.small .win { width: 52px; height: 52px; font-size: 24px; border-width: 3px; }
+  .house.small .op { font-size: 20px; }
+  .pair { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .pair .house { --w: 160px; }
+  .slot { display: inline-grid; place-items: center; min-width: 1.6em; padding: 0 0.15em; border-radius: 10px; color: var(--trap); font-weight: 900; font-variant-numeric: tabular-nums; }
+  .attic .slot, .win .slot { width: 100%; height: 100%; border-radius: inherit; background: #fff4d6; outline: 3px dashed var(--trap); outline-offset: -9px; }
+  .bigeq .slot, .steps .slot.live { background: #fff4d6; border: 3px dashed var(--trap); min-width: 2.2em; line-height: 1.2; }
+  .bigeq { text-align: center; font-weight: 900; font-size: clamp(30px, 9vw, 40px); font-variant-numeric: tabular-nums; }
+  .facts { text-align: center; font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; }
+  .rhyme { background: #fff1c2; border: 3px solid var(--ink); border-radius: 18px; padding: 14px 16px; }
+  .rhyme .tag { display: block; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 900; color: var(--muted); }
+  .rhyme p { margin: 2px 0 0; font-family: var(--display); font-size: 22px; line-height: 1.25; text-wrap: balance; }
+  .rhyme .ln { display: block; }
+  .rnote { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; padding-top: 10px; border-top: 2px dashed rgba(31, 42, 85, 0.25); font-weight: 900; font-size: 24px; }
+  .seq { display: flex; gap: 6px; }
+  .seq b { display: grid; place-items: center; width: 38px; height: 42px; border: 3px solid var(--ink); border-radius: 10px; background: var(--paper); }
+  .seq b:nth-child(-n + 2) { background: #e3f6ea; color: var(--good); }
+  .seq b:nth-child(n + 3) { background: #e7eeff; color: #2d6cdf; }
+  .seqeq i { font-style: normal; }
+  .seqeq .sg { color: var(--good); }
+  .seqeq .sb { color: #2d6cdf; }
+  .twinnote { font-weight: 800; color: var(--trap); text-align: center; }
+  div.ex .slot { color: var(--good); padding: 0 0.1em; min-width: 0; }
+  .exres { margin-top: 4px; padding-top: 4px; border-top: 2px solid var(--ghost); color: var(--good); }
+  .taskline { text-align: center; font-weight: 800; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; counter-reset: st; }
+  .steps li { counter-increment: st; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-weight: 800; font-size: 19px; font-variant-numeric: tabular-nums; padding: 8px 12px 8px 46px; border-radius: 14px; position: relative; min-height: 52px; }
+  .steps li::before { content: counter(st); position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--ink); display: grid; place-items: center; font-size: 14px; background: var(--paper); }
+  .steps li.done { background: #e3f6ea; }
+  .steps li.done .slot { color: var(--good); }
+  .steps li.done::before { content: '✓'; background: var(--good); color: #fff; }
+  .steps li.cur { background: #fff8e1; border: 3px solid var(--ink); }
+  .steps li.todo { color: var(--ghost); letter-spacing: 0.3em; }
+
+  /* ---- English: картинка-эмодзи, перевод, пропуск в предложении, таблица правил ---- */
+  .pic { font-size: 92px; line-height: 1.05; text-align: center; }
+  .pic.sm { font-size: 56px; }
+  .ru { text-align: center; color: var(--muted); font-weight: 800; font-size: 18px; }
+  .sent .gap { display: inline-block; min-width: 2.2em; border-bottom: 4px solid var(--trap); color: var(--trap); text-align: center; }
+  .pi { font-size: 26px; }
+  .yn { display: block; text-align: center; font-size: 40px; }
+  .pt { border-collapse: collapse; margin: 4px 0; background: #fff; }
+  .pt td, .pt th { border: 2px solid var(--ink); padding: 3px 10px; font-size: 16px; text-align: left; }
+
+  /* ---- Город Задач: текст задачи, схемы-отрезки, таблица К1 · К = ОК ---- */
+  .task { overflow-wrap: anywhere; min-width: 0; padding: 12px 16px; border: 3px solid var(--ink); border-radius: 18px; background: #fff8dc; font-size: 20px; font-weight: 800; line-height: 1.4; }
+  .task.sm { font-size: 17px; padding: 10px 12px; }
+  .mini { display: grid; place-items: center; padding: 6px; border: 2px dashed var(--ghost); border-radius: 14px; background: #fff; }
+  .mini .scheme { max-height: 150px; width: auto; max-width: 100%; }
+  .eq { text-align: center; font-weight: 900; font-size: 28px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+  .eq b { color: var(--good); }
+  .eq .blank { width: 2em; height: 1.1em; }
+  b.big { font-size: 1.3em; color: var(--accent); }
+  div.ex .task.sm { background: #fffdf8; }
+  div.ex .eq { font-size: 22px; }
+  .scheme { display: block; max-width: 100%; height: auto; margin: 0 auto; overflow: visible; }
+  .scheme .sg { stroke: #2b3a9e; stroke-width: 4; stroke-linecap: round; }
+  .scheme .ds { stroke-dasharray: 6 5; stroke-width: 3; }
+  .scheme .dt { fill: #2b3a9e; }
+  .scheme .dt.ho { fill: #fff; stroke: #2b3a9e; stroke-width: 2; }
+  .scheme .br { fill: none; stroke: #26224f; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .scheme .br.bq { stroke: #e8452c; }
+  .scheme text { font-family: 'Nunito', system-ui, sans-serif; font-weight: 900; font-size: 17px; fill: #26224f; }
+  .scheme .sq { fill: #e8452c; font-size: 19px; }
+  .scheme .nm { font-size: 15px; fill: #5b5785; }
+  .kt { border-collapse: collapse; margin: 4px auto; font-size: 15px; background: #fff; max-width: 100%; }
+  .kt th, .kt td { border: 3px solid var(--ink); padding: 6px 10px; text-align: center; vertical-align: top; }
+  .kt th { background: #f1ecff; font-weight: 800; font-size: 13px; line-height: 1.2; max-width: 9em; }
+  .kt th span { display: block; font-family: var(--display); font-size: 24px; font-weight: 400; color: #7a4fe0; }
+  .kt td { font-size: 26px; font-weight: 900; height: 52px; min-width: 3.4em; }
+  .kt .q { color: var(--trap); }
+
+  @include domashka.styles;
+}
